@@ -1,0 +1,39 @@
+//
+//  UIKitExtensions.swift
+//  Breakout
+//
+//  Created by ana videnovic on 10/20/17.
+//  Copyright © 2017 ana videnovic. All rights reserved.
+//
+
+import UIKit
+
+extension CGFloat {
+    static func random(max: Int) -> CGFloat {
+        return CGFloat(arc4random() % UInt32(max))
+    }
+    
+    static func random(in range: Range<CGFloat>) -> CGFloat {
+        return CGFloat(arc4random())/CGFloat(UInt32.max) * (range.upperBound-range.lowerBound) + range.lowerBound
+    }
+}
+
+extension CGRect {
+    var mid: CGPoint { return CGPoint(x: midX, y: midY) }
+    var upperLeft: CGPoint { return CGPoint(x: minX, y: minY) }
+    var lowerLeft: CGPoint { return CGPoint(x: minX, y: maxY) }
+    var upperRight: CGPoint { return CGPoint(x: maxX, y: minY) }
+    var lowerRight: CGPoint { return CGPoint(x: maxX, y: maxY) }
+    
+    init(center: CGPoint, size: CGSize) {
+        let upperLeft = CGPoint(x: center.x-size.width/2, y: center.y-size.height/2)
+        self.init(origin: upperLeft, size: size)
+    }
+}
+
+extension UIView {
+    func makeCircular() {
+        self.layer.cornerRadius = min(self.frame.size.height, self.frame.size.width) / 2.0
+        self.clipsToBounds = true
+    }
+}
