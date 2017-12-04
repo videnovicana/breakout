@@ -21,7 +21,7 @@ class BreakoutView: UIView {
         didSet {
             if ballBehavior != nil {
                 ballBehavior!.setCollidersAction { [weak self] in
-                    self?.returnBallToPaddle()
+                    self?.returnBallToPaddleIfNecessary()
                 }
                 updateRealGravity()
             }
@@ -436,7 +436,7 @@ class BreakoutView: UIView {
         }
     }
     
-    private func returnBallToPaddle() {
+    private func returnBallToPaddleIfNecessary() {
         if let animator = ballBehavior?.dynamicAnimator {
             for (offset: index, element: (ball: ball, isAnimated: _)) in bouncingBalls.enumerated() {
                 if let gameBounds = animator.referenceView?.bounds.insetBy(dx: ball.frame.size.width/2, dy: ball.frame.size.height/2),
