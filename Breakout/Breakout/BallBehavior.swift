@@ -10,7 +10,7 @@ import UIKit
 
 class BallBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
-    private var balls = [UIView]()
+    private var balls = [CircleView]()
     
     private let gravity: UIGravityBehavior = {
         let behavior = UIGravityBehavior()
@@ -27,7 +27,7 @@ class BallBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     
     private var itemBehavior: UIDynamicItemBehavior = {
         let behavior = UIDynamicItemBehavior()
-        behavior.allowsRotation = true
+        behavior.allowsRotation = false
         behavior.elasticity = Constants.defaultBallBounciness
         behavior.resistance = 0
         behavior.friction = 0
@@ -46,7 +46,7 @@ class BallBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     }
     
     func addItem(_ item: UIDynamicItem) {
-        if let ball = item as? UIView {
+        if let ball = item as? CircleView {
             balls.append(ball)
         }
         gravity.addItem(item)
@@ -55,7 +55,7 @@ class BallBehavior: UIDynamicBehavior, UICollisionBehaviorDelegate {
     }
     
     func removeItem(_ item: UIDynamicItem) {
-        if let ball = item as? UIView,
+        if let ball = item as? CircleView,
             let index = balls.index(of: ball) {
             balls.remove(at: index)
         }

@@ -13,7 +13,7 @@ import CoreMotion
 class BreakoutView: UIView {
     
     // MARK: views
-    private var bouncingBalls = [(ball: UIView, isAnimated: Bool)]()
+    private var bouncingBalls = [(ball: CircleView, isAnimated: Bool)]()
     private var bricks = [UIView?]()
     private var paddle: UIView!
 
@@ -158,6 +158,7 @@ class BreakoutView: UIView {
             if !isAnimated {
                 ball.center = newBallCenter
             }
+            ball.layoutIfNeeded()
         }
     }
     
@@ -300,8 +301,7 @@ class BreakoutView: UIView {
     }
     
     func addBall() {
-        let ball = UIView(frame: CGRect(center: newBallCenter, size: ballSize))
-        ball.makeCircular()
+        let ball = CircleView(frame: CGRect(center: newBallCenter, size: ballSize))
         bouncingBalls.append((ball, false))
         ball.backgroundColor = Colors.ball
         addSubview(ball)

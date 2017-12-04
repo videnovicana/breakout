@@ -18,6 +18,7 @@
 		E580EAE51F9A3DBD00D35B8E /* BreakoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580EAE41F9A3DBD00D35B8E /* BreakoutView.swift */; };
 		E580EAE71F9A52B100D35B8E /* BallBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580EAE61F9A52B100D35B8E /* BallBehavior.swift */; };
 		E580EAE91F9A59CD00D35B8E /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */; };
+		E5D451121FD5D87300D11EEA /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D451111FD5D87300D11EEA /* CircleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		E580EAE41F9A3DBD00D35B8E /* BreakoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakoutView.swift; sourceTree = "<group>"; };
 		E580EAE61F9A52B100D35B8E /* BallBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BallBehavior.swift; sourceTree = "<group>"; };
 		E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
+		E5D451111FD5D87300D11EEA /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,10 +72,11 @@
 				E50894FC1FA4DFD000B6AA14 /* SettingsViewController.swift */,
 				E580EAE41F9A3DBD00D35B8E /* BreakoutView.swift */,
 				E580EAE61F9A52B100D35B8E /* BallBehavior.swift */,
-				E5133D061F9A95E800DE2373 /* Constants.swift */,
-				E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */,
-				E580EAD51F9A3D3D00D35B8E /* Main.storyboard */,
+				E5D451111FD5D87300D11EEA /* CircleView.swift */,
 				E53699C61FA5264A009F4A68 /* UserDefaultsManager.swift */,
+				E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */,
+				E5133D061F9A95E800DE2373 /* Constants.swift */,
+				E580EAD51F9A3D3D00D35B8E /* Main.storyboard */,
 				E580EADD1F9A3D3D00D35B8E /* Info.plist */,
 				E580EAE31F9A3D5400D35B8E /* Supporting Files */,
 			);
@@ -162,6 +165,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5D451121FD5D87300D11EEA /* CircleView.swift in Sources */,
 				E580EAE91F9A59CD00D35B8E /* UIKitExtensions.swift in Sources */,
 				E580EAE71F9A52B100D35B8E /* BallBehavior.swift in Sources */,
 				E50894FD1FA4DFD000B6AA14 /* SettingsViewController.swift in Sources */,
