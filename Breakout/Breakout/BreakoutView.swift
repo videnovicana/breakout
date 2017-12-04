@@ -279,11 +279,7 @@ class BreakoutView: UIView {
     }
     
     private func drawPaddleAndAddItsBoundaryToBehavior() {
-        if paddle != nil {
-            paddle.removeFromSuperview()
-            //ballBehavior?.removeBoundary(named: BoundaryNames.paddle)
-            paddle = nil
-        }
+        deletePaddle()
         paddle = UIView(frame: CGRect(center: initialPaddleCenter, size: paddleSize))
         paddle.backgroundColor = Colors.paddle
         addSubview(paddle)
@@ -330,9 +326,11 @@ class BreakoutView: UIView {
     }
     
     private func deletePaddle() {
-        //ballBehavior?.removeBoundary(named: BoundaryNames.paddle)
-        paddle.removeFromSuperview()
-        paddle = nil
+        if paddle != nil {
+            //ballBehavior?.removeBoundary(named: BoundaryNames.paddle)
+            paddle.removeFromSuperview()
+            paddle = nil
+        }
     }
     
     private func withdrawBricksFromGameView() {
@@ -403,17 +401,19 @@ class BreakoutView: UIView {
     }
     
     @objc func movePaddle(byReactingTo recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .began, .changed:
-            let translationAlongXAxis = recognizer.translation(in: self).x
-            recognizer.setTranslation(CGPoint.zero, in: self)
-            paddle.center.x += translationAlongXAxis < 0 ?
-                max(translationAlongXAxis, maximumAllowedPaddleTranslationAlongXAxisToTheLeft) :
-                min(translationAlongXAxis, maximumAllowedPaddleTranslationAlongXAxisToTheRight)
-            moveBallsWaitingOnPaddle()
-            ballBehavior?.addBoundary(UIBezierPath(ovalIn: paddle.frame), named: BoundaryNames.paddle)
-        default:
-            break
+        if paddle != nil {
+            switch recognizer.state {
+            case .began, .changed:
+                let translationAlongXAxis = recognizer.translation(in: self).x
+                recognizer.setTranslation(CGPoint.zero, in: self)
+                paddle.center.x += translationAlongXAxis < 0 ?
+                    max(translationAlongXAxis, maximumAllowedPaddleTranslationAlongXAxisToTheLeft) :
+                    min(translationAlongXAxis, maximumAllowedPaddleTranslationAlongXAxisToTheRight)
+                moveBallsWaitingOnPaddle()
+                ballBehavior?.addBoundary(UIBezierPath(ovalIn: paddle.frame), named: BoundaryNames.paddle)
+            default:
+                break
+            }
         }
     }
     
