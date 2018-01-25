@@ -40,6 +40,10 @@ class SettingsViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        showSavedSettings()
+    }
+
+    private func showSavedSettings() {
         numberOfBallsControl?.selectedSegmentIndex = (UserDefaultsManager.numberOfBalls ?? 1) - 1
         ballBouncinessSlider?.value = UserDefaultsManager.ballBounciness ?? 1.0
         gravityPullSwitch?.isOn = UserDefaultsManager.realGravityIsOn ?? false

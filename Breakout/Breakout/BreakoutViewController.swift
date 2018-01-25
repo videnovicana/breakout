@@ -27,12 +27,7 @@ class BreakoutViewController: UIViewController {
         super.viewDidAppear(animated)
         initializeIfNeeded()
         animator.addBehavior(ballBehavior)
-        gameView.numberOfBalls = UserDefaultsManager.numberOfBalls ?? Constants.defautlNumberOfBalls
-        gameView.numberOfBricks = UserDefaultsManager.numberOfBricks ?? Constants.defaultNumberOfBricks
-        gameView.useRealGravity = UserDefaultsManager.realGravityIsOn ?? false
-        if let bounciness = UserDefaultsManager.ballBounciness {
-            gameView.ballBounciness = CGFloat(bounciness)
-        }
+        refreshSettings()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -55,6 +50,15 @@ class BreakoutViewController: UIViewController {
             gameView.ballBehavior = ballBehavior
             gameView.useRealGravity = UserDefaultsManager.realGravityIsOn ?? false
             gameView.setUpNewGameView()
+        }
+    }
+
+    private func refreshSettings() {
+        gameView.numberOfBalls = UserDefaultsManager.numberOfBalls ?? Constants.defautlNumberOfBalls
+        gameView.numberOfBricks = UserDefaultsManager.numberOfBricks ?? Constants.defaultNumberOfBricks
+        gameView.useRealGravity = UserDefaultsManager.realGravityIsOn ?? false
+        if let bounciness = UserDefaultsManager.ballBounciness {
+            gameView.ballBounciness = CGFloat(bounciness)
         }
     }
 }
