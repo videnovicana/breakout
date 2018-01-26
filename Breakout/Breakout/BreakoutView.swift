@@ -16,6 +16,7 @@ class BreakoutView: UIView {
     private var bouncingBalls = [(ball: CircleView, isAnimated: Bool)]()
     private var bricks = [UIView?]()
     private var paddle: UIView!
+    private var timeLabel = UILabel()
 
     var ballBehavior: BallBehavior? {
         didSet {
@@ -92,11 +93,36 @@ class BreakoutView: UIView {
             motionManager.stopAccelerometerUpdates()
         }
     }
-    
+
+    // MARK: - Measuring time
+    private var timeCounter = 0
+    private var timer: Timer?
+
+    private func startTimerIfNeeded() {
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        }
+    }
+
+    @objc private func updateTimer() {
+        timeCounter += 1
+        timeLabel.text = "Time: \(timeCounter)"
+    }
+
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+
+    private func resetCounter() {
+        timeCounter = 0
+    }
+
     // MARK: - game lifecycle variable
     private var numberOfBricksDown: Int = 0 {
         didSet {
             if numberOfBricksDown == numberOfBricks {
+                stopTimer()
                 clearViewToRestartGame()
                 wellDoneNewGameAlert()
             }
@@ -110,7 +136,7 @@ class BreakoutView: UIView {
     }
     
     private func wellDoneNewGameAlert() {
-        let alert = UIAlertController(title: WinAlert.title, message: WinAlert.message, preferredStyle: .alert)
+        let alert = UIAlertController(title: WinAlert.title, message: scoreInformationMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: WinAlert.okActionTitle, style: .default)
         { [unowned self] action in
             self.setUpNewGameView()
@@ -122,6 +148,10 @@ class BreakoutView: UIView {
         }
         rootVC?.present(alert, animated: true, completion: nil)
     }
+
+    private var scoreInformationMessage: String {
+        return "Time: \(timeCounter)"
+    }
     
     func setUpNewGameView() {
         if ballBehavior != nil { // unless we have a behavior it's pointless to set up anything
@@ -129,6 +159,8 @@ class BreakoutView: UIView {
             drawBricksAndAddTheirBoundariesToBehavior()
             drawPaddleAndAddItsBoundaryToBehavior()
             drawBalls()
+            resetCounter()
+            addTimeLabel()
         }
     }
     
@@ -137,6 +169,7 @@ class BreakoutView: UIView {
         deleteBalls()
         deleteBricks()
         deletePaddle()
+        deleteTimeLabel()
     }
     
     func redrawGameViewUponRotation() {
@@ -149,6 +182,7 @@ class BreakoutView: UIView {
             redrawExistingBricksAndTheirBoundaries()
             drawPaddleAndAddItsBoundaryToBehavior()
             resizeAndMoveBallsUponRotation()
+            redrawTimeLabel()
         }
     }
     
@@ -172,7 +206,7 @@ class BreakoutView: UIView {
     
     private func drawBricksAndAddTheirBoundariesToBehavior() {
         var numberOfDrawnBricks = 0
-        var upperLeftPointOfNextBrick = CGPoint(x: Constants.brickInterspace, y: Constants.bricksOffsetFromTop)
+        var upperLeftPointOfNextBrick = CGPoint(x: Constants.brickInterspace, y: bricksOffsetFromTop)
         
         while numberOfDrawnBricks < numberOfBricks {
             
@@ -224,7 +258,7 @@ class BreakoutView: UIView {
     
     private func redrawExistingBricksAndTheirBoundaries() {
         var numberOfDrawnBricks = 0
-        var upperLeftPointOfNextBrick = CGPoint(x: Constants.brickInterspace, y: Constants.bricksOffsetFromTop)
+        var upperLeftPointOfNextBrick = CGPoint(x: Constants.brickInterspace, y: bricksOffsetFromTop)
 
         for (index, brick) in bricks.enumerated() {
             
@@ -339,12 +373,39 @@ class BreakoutView: UIView {
             //ballBehavior?.removeBoundary(named: BoundaryNames.brick + String(index))
         }
     }
-    
+
+    private func addTimeLabel() {
+        timeLabel.frame = timeLabelRect
+        timeLabel.text = "Time: \(timeCounter)"
+        timeLabel.font = Constants.timeLableFont
+        timeLabel.textColor = UIColor.gray
+        addSubview(timeLabel)
+    }
+
+    private func redrawTimeLabel() {
+        timeLabel.frame = timeLabelRect
+    }
+
+    private func deleteTimeLabel() {
+        timeLabel.removeFromSuperview()
+    }
+
+    private var timeLabelRect: CGRect {
+        return CGRect(
+            origin: CGPoint(x: Constants.brickInterspace, y: Constants.brickInterspace),
+            size: CGSize(width: bricksOffsetFromTop * Constants.timeLabelWidthToHeightRatio, height: bricksOffsetFromTop)
+        )
+    }
+
     private var brickSize: CGSize {
         return CGSize(
-            width: (bounds.width - Constants.brickInterspace * CGFloat(Constants.numberOfBrickColumns+1)) / 5,
+            width: (bounds.width - Constants.brickInterspace * CGFloat(Constants.numberOfBrickColumns+1)) / CGFloat(Constants.numberOfBrickColumns),
             height: bounds.height * Constants.boundsHeightToBrickHeightRatio
         )
+    }
+
+    private var bricksOffsetFromTop: CGFloat {
+        return max(Constants.bricksOffsetFromTop, bounds.height/Constants.boundsHeightToBrickOffsetFromTopRatio)
     }
     
     private var paddleSize: CGSize {
@@ -397,6 +458,7 @@ class BreakoutView: UIView {
         if recognizer.state == .ended {
             addBallsToAnimatorIfNotAlreadySo()
             ballBehavior?.pushBalls()
+            startTimerIfNeeded()
         }
     }
     

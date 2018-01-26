@@ -19,6 +19,7 @@ struct Constants {
     static let brickToPaddleWidthRatio: CGFloat = 1.5
     static let brickToPaddleHeightRatio: CGFloat = 0.5
     static let paddleOffsetFromBottomToHeightRatio: CGFloat = 0.15
+    static let boundsHeightToBrickOffsetFromTopRatio: CGFloat = 8
     
     static let brickVanishTime: TimeInterval = 0.5
 
@@ -27,6 +28,9 @@ struct Constants {
     static let ballPusherMagnitude: CGFloat = 0.6
     static let ballPusherAngleRange: Range = 4/3*CGFloat.pi..<5/3*CGFloat.pi
     static let defaultGravityMagnitude: CGFloat = 0.1
+
+    static let timeLabelWidthToHeightRatio: CGFloat = 3
+    static let timeLableFont = UIFont(name: "CourierNewPS-BoldMT", size: 20)
 }
 
 struct BoundaryNames {
