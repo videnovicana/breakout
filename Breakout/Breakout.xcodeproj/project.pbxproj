@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E50894FD1FA4DFD000B6AA14 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50894FC1FA4DFD000B6AA14 /* SettingsViewController.swift */; };
+		E51166D22020A12C00339FC0 /* HighScoresTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51166D12020A12C00339FC0 /* HighScoresTableViewController.swift */; };
 		E5133D071F9A95E800DE2373 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5133D061F9A95E800DE2373 /* Constants.swift */; };
 		E515B5D2201FE8C0006E8EAE /* HighScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E515B5CF201FE8C0006E8EAE /* HighScore.swift */; };
 		E515B5D3201FE8C0006E8EAE /* HighScores.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E515B5D0201FE8C0006E8EAE /* HighScores.xcdatamodeld */; };
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		E50894FC1FA4DFD000B6AA14 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		E51166D12020A12C00339FC0 /* HighScoresTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoresTableViewController.swift; sourceTree = "<group>"; };
 		E5133D061F9A95E800DE2373 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E515B5CF201FE8C0006E8EAE /* HighScore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighScore.swift; sourceTree = "<group>"; };
 		E515B5D1201FE8C0006E8EAE /* HighScores.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HighScores.xcdatamodel; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				E515B5CF201FE8C0006E8EAE /* HighScore.swift */,
 				E515B5D0201FE8C0006E8EAE /* HighScores.xcdatamodeld */,
 				E53699C61FA5264A009F4A68 /* UserDefaultsManager.swift */,
+				E51166D12020A12C00339FC0 /* HighScoresTableViewController.swift */,
 				E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */,
 				E5133D061F9A95E800DE2373 /* Constants.swift */,
 				E580EAD51F9A3D3D00D35B8E /* Main.storyboard */,
@@ -171,6 +174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E51166D22020A12C00339FC0 /* HighScoresTableViewController.swift in Sources */,
 				E5D451121FD5D87300D11EEA /* CircleView.swift in Sources */,
 				E580EAE91F9A59CD00D35B8E /* UIKitExtensions.swift in Sources */,
 				E580EAE71F9A52B100D35B8E /* BallBehavior.swift in Sources */,
