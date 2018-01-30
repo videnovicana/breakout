@@ -35,6 +35,11 @@ class HighScoresTableViewController: UITableViewController {
         }
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Highscores"
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateUI()
@@ -45,7 +50,18 @@ class HighScoresTableViewController: UITableViewController {
 extension HighScoresTableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return fetchedResultsController?.sections?.count ?? 1
+        let numberOfSections = fetchedResultsController?.sections?.count ?? 0
+        tableView.backgroundView = numberOfSections == 0 ? emptyStateLabel : nil
+
+        return numberOfSections
+    }
+
+    private var emptyStateLabel: UILabel {
+        let emptyStateLabel = UILabel(frame: tableView.bounds)
+        emptyStateLabel.text = "No highscores yet!"
+        emptyStateLabel.textColor = UIColor.gray
+        emptyStateLabel.textAlignment = .center
+        return emptyStateLabel
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
