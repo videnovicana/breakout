@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E50894FD1FA4DFD000B6AA14 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50894FC1FA4DFD000B6AA14 /* SettingsViewController.swift */; };
 		E5133D071F9A95E800DE2373 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5133D061F9A95E800DE2373 /* Constants.swift */; };
+		E515B5D2201FE8C0006E8EAE /* HighScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E515B5CF201FE8C0006E8EAE /* HighScore.swift */; };
+		E515B5D3201FE8C0006E8EAE /* HighScores.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E515B5D0201FE8C0006E8EAE /* HighScores.xcdatamodeld */; };
 		E53699C71FA5264A009F4A68 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53699C61FA5264A009F4A68 /* UserDefaultsManager.swift */; };
 		E580EAD21F9A3D3D00D35B8E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580EAD11F9A3D3D00D35B8E /* AppDelegate.swift */; };
 		E580EAD41F9A3D3D00D35B8E /* BreakoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580EAD31F9A3D3D00D35B8E /* BreakoutViewController.swift */; };
@@ -24,6 +26,8 @@
 /* Begin PBXFileReference section */
 		E50894FC1FA4DFD000B6AA14 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		E5133D061F9A95E800DE2373 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		E515B5CF201FE8C0006E8EAE /* HighScore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighScore.swift; sourceTree = "<group>"; };
+		E515B5D1201FE8C0006E8EAE /* HighScores.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HighScores.xcdatamodel; sourceTree = "<group>"; };
 		E53699C61FA5264A009F4A68 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		E580EACE1F9A3D3D00D35B8E /* Breakout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breakout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E580EAD11F9A3D3D00D35B8E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +77,8 @@
 				E580EAE41F9A3DBD00D35B8E /* BreakoutView.swift */,
 				E580EAE61F9A52B100D35B8E /* BallBehavior.swift */,
 				E5D451111FD5D87300D11EEA /* CircleView.swift */,
+				E515B5CF201FE8C0006E8EAE /* HighScore.swift */,
+				E515B5D0201FE8C0006E8EAE /* HighScores.xcdatamodeld */,
 				E53699C61FA5264A009F4A68 /* UserDefaultsManager.swift */,
 				E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */,
 				E5133D061F9A95E800DE2373 /* Constants.swift */,
@@ -169,7 +175,9 @@
 				E580EAE91F9A59CD00D35B8E /* UIKitExtensions.swift in Sources */,
 				E580EAE71F9A52B100D35B8E /* BallBehavior.swift in Sources */,
 				E50894FD1FA4DFD000B6AA14 /* SettingsViewController.swift in Sources */,
+				E515B5D2201FE8C0006E8EAE /* HighScore.swift in Sources */,
 				E580EAE51F9A3DBD00D35B8E /* BreakoutView.swift in Sources */,
+				E515B5D3201FE8C0006E8EAE /* HighScores.xcdatamodeld in Sources */,
 				E580EAD41F9A3D3D00D35B8E /* BreakoutViewController.swift in Sources */,
 				E580EAD21F9A3D3D00D35B8E /* AppDelegate.swift in Sources */,
 				E53699C71FA5264A009F4A68 /* UserDefaultsManager.swift in Sources */,
@@ -358,6 +366,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E515B5D0201FE8C0006E8EAE /* HighScores.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E515B5D1201FE8C0006E8EAE /* HighScores.xcdatamodel */,
+			);
+			currentVersion = E515B5D1201FE8C0006E8EAE /* HighScores.xcdatamodel */;
+			path = HighScores.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = E580EAC61F9A3D3D00D35B8E /* Project object */;
 }

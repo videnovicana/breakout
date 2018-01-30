@@ -23,6 +23,7 @@ struct Constants {
     
     static let brickVanishTime: TimeInterval = 0.5
 
+    static let maximumNumberOfBalls: Int = 3
     static let defaultBallBounciness: CGFloat = 1.0
     static let defautlNumberOfBalls: Int = 1
     static let ballPusherMagnitude: CGFloat = 0.6
@@ -31,6 +32,9 @@ struct Constants {
 
     static let timeLabelWidthToHeightRatio: CGFloat = 3
     static let timeLableFont = UIFont(name: "CourierNewPS-BoldMT", size: 20)
+
+    static let maximumNumberOfHighScores: Int = 10
+    static let defaultPlayerName: String = "Lazy Player"
 }
 
 struct BoundaryNames {

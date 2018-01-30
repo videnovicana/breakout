@@ -124,10 +124,16 @@ class BreakoutView: UIView {
             if numberOfBricksDown == numberOfBricks {
                 stopTimer()
                 clearViewToRestartGame()
-                wellDoneNewGameAlert()
-            }
+                if let delegate = highScoresDelegate, delegate.checkIfNewHigh(score: timeCounter, forBallCount: numberOfBalls) {
+                    delegate.updateHighScores(with: timeCounter, forBallCount: numberOfBalls)
+                } else {
+                    wellDoneNewGameAlert()
+                }
+           }
         }
     }
+
+    weak var highScoresDelegate: HighScoresDelegate?
     
     private struct WinAlert {
         static let title = "Well Done!"
