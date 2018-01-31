@@ -20,11 +20,11 @@ class BreakoutView: UIView {
 
     var ballBehavior: BallBehavior? {
         didSet {
-            if ballBehavior != nil {
-                ballBehavior!.setCollidersAction { [weak self] in
+            if let behavior = ballBehavior {
+                behavior.setCollidersAction { [weak self] in
                     self?.returnBallToPaddleIfNecessary()
                 }
-                updateRealGravity()
+                updateRealGravity(in: behavior)
             }
         }
     }
@@ -33,7 +33,6 @@ class BreakoutView: UIView {
     var numberOfBalls: Int = 1 {
         didSet {
             if numberOfBalls != oldValue {
-                print("Number of balls: \(numberOfBalls)")
                 clearViewToRestartGame()
                 setUpNewGameView()
             }
@@ -43,7 +42,6 @@ class BreakoutView: UIView {
     var numberOfBricks: Int = 20 {
         didSet {
             if numberOfBricks != oldValue {
-                print("Number of bricks: \(numberOfBricks)")
                 clearViewToRestartGame()
                 setUpNewGameView()
             }
@@ -52,28 +50,25 @@ class BreakoutView: UIView {
     
     var ballBounciness: CGFloat = 1.0 {
         didSet {
-            print("Elasticity: \(ballBounciness)")
             ballBehavior?.setBallBounciness(ballBounciness)
         }
-        
     }
     
     var useRealGravity: Bool = false {
         didSet {
-            print("Use real gravity: \(useRealGravity)")
-            if ballBehavior != nil {
-                updateRealGravity()
+            if let behavior = ballBehavior {
+                updateRealGravity(in: behavior)
             }
         }
     }
     
     private let motionManager = CMMotionManager()
     
-    private func updateRealGravity() {
+    private func updateRealGravity(in behavior: BallBehavior) {
         if useRealGravity {
             if motionManager.isAccelerometerAvailable && !motionManager.isAccelerometerActive {
                 motionManager.startAccelerometerUpdates(to: .main) { [unowned self] (data, error) in
-                    if self.ballBehavior?.dynamicAnimator != nil {
+                    if behavior.dynamicAnimator != nil {
                         if var dx = data?.acceleration.x, var dy = data?.acceleration.y {
                             switch UIDevice.current.orientation {
                             case .portrait: dy = -dy
@@ -82,7 +77,7 @@ class BreakoutView: UIView {
                             case .landscapeRight: swap(&dx, &dy)
                             default: dx = 0; dy=0
                             }
-                            self.ballBehavior!.setGravity(vector: CGVector(dx: dx, dy: dy))
+                            behavior.setGravity(vector: CGVector(dx: dx, dy: dy))
                         }
                     } else {
                         self.motionManager.stopAccelerometerUpdates()
@@ -134,16 +129,10 @@ class BreakoutView: UIView {
     }
 
     weak var highScoresDelegate: HighScoresDelegate?
-    
-    private struct WinAlert {
-        static let title = "Well Done!"
-        static let message = "New game?"
-        static let okActionTitle = "OK"
-    }
-    
+
     private func wellDoneNewGameAlert() {
-        let alert = UIAlertController(title: WinAlert.title, message: scoreInformationMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: WinAlert.okActionTitle, style: .default)
+        let alert = UIAlertController(title: "Well Done!", message: scoreInformationMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default)
         { [unowned self] action in
             self.setUpNewGameView()
         })
@@ -160,10 +149,10 @@ class BreakoutView: UIView {
     }
     
     func setUpNewGameView() {
-        if ballBehavior != nil { // unless we have a behavior it's pointless to set up anything
-            addScreenBoundaryToBehavior()
-            drawBricksAndAddTheirBoundariesToBehavior()
-            drawPaddleAndAddItsBoundaryToBehavior()
+        if let behavior = ballBehavior {
+            addScreenBoundary(to: behavior)
+            drawBricksAndAddTheirBoundaries(to: behavior)
+            drawPaddleAndAddItsBoundary(to: behavior)
             drawBalls()
             resetCounter()
             addTimeLabel()
@@ -179,14 +168,14 @@ class BreakoutView: UIView {
     }
     
     func redrawGameViewUponRotation() {
-        if ballBehavior != nil {
-            ballBehavior!.clearCollisionBoundariesAndHandlers()
+        if let behavior = ballBehavior {
+            behavior.clearCollisionBoundariesAndHandlers()
             withdrawBricksFromGameView()
             deletePaddle()
             
-            addScreenBoundaryToBehavior()
-            redrawExistingBricksAndTheirBoundaries()
-            drawPaddleAndAddItsBoundaryToBehavior()
+            addScreenBoundary(to: behavior)
+            redrawExistingBricksAndAddTheirBoundaries(to: behavior)
+            drawPaddleAndAddItsBoundary(to: behavior)
             resizeAndMoveBallsUponRotation()
             redrawTimeLabel()
         }
@@ -202,15 +191,14 @@ class BreakoutView: UIView {
         }
     }
     
-    private func addScreenBoundaryToBehavior() {
-        assert(ballBehavior != nil, "Unexpected case: addScreenBoundaryToBehavior can only be called when ballBehavior is already set.")
+    private func addScreenBoundary(to behavior: BallBehavior) {
         let gameRectangle = bounds.insetBy(dx: Constants.brickInterspace, dy:  Constants.brickInterspace)
-        ballBehavior!.addBoundary(from: gameRectangle.lowerLeft, to: gameRectangle.upperLeft, named: BoundaryNames.left)
-        ballBehavior!.addBoundary(from: gameRectangle.upperLeft, to: gameRectangle.upperRight, named: BoundaryNames.upper)
-        ballBehavior!.addBoundary(from: gameRectangle.lowerRight, to: gameRectangle.upperRight, named: BoundaryNames.right)
+        behavior.addBoundary(from: gameRectangle.lowerLeft, to: gameRectangle.upperLeft, named: BoundaryNames.left)
+        behavior.addBoundary(from: gameRectangle.upperLeft, to: gameRectangle.upperRight, named: BoundaryNames.upper)
+        behavior.addBoundary(from: gameRectangle.lowerRight, to: gameRectangle.upperRight, named: BoundaryNames.right)
     }
     
-    private func drawBricksAndAddTheirBoundariesToBehavior() {
+    private func drawBricksAndAddTheirBoundaries(to behavior: BallBehavior) {
         var numberOfDrawnBricks = 0
         var upperLeftPointOfNextBrick = CGPoint(x: Constants.brickInterspace, y: bricksOffsetFromTop)
         
@@ -228,33 +216,34 @@ class BreakoutView: UIView {
             
             let brickBoundaryPath = UIBezierPath(rect: brick.frame)
             let brickBoundaryName = BoundaryNames.brick + String(numberOfDrawnBricks)
-            ballBehavior!.addBoundary(brickBoundaryPath,
-                                      named: brickBoundaryName,
-                                      collisionHandler: { [weak self] in
-                                        UIView.animate(
-                                            withDuration: Constants.brickVanishTime,
-                                            delay: 0.0,
-                                            options: [.curveEaseOut],
-                                            animations: {
-                                                brick.backgroundColor = Colors.hitBrick
-                                                self?.ballBehavior?.removeBoundary(named: brickBoundaryName)
-                                                Timer.scheduledTimer(withTimeInterval: Constants.brickVanishTime, repeats: false) { timer in
-                                                    brick.alpha = 0.0
-                                                }
-                                            },
-                                            completion: { finished in
-                                                if finished {
-                                                    brick.removeFromSuperview()
-                                                    let indexOfInt = brickBoundaryName.index(brickBoundaryName.startIndex, offsetBy: 5)
-                                                    //TODO: extracting int from string is probably a temporary solution.
-                                                    // 5 is number of chars in "Brick12" before int appears. This should be done more thoughtfully.
-                                                    if let index = Int(brickBoundaryName[indexOfInt...]) {
-                                                        self?.bricks[index] = nil
-                                                    }
-                                                    self?.numberOfBricksDown += 1
-                                                }
-                                            }
-                                        )
+            behavior.addBoundary(
+                brickBoundaryPath,
+                named: brickBoundaryName,
+                collisionHandler: { [weak self] in
+                    UIView.animate(
+                        withDuration: Constants.brickVanishTime,
+                        delay: 0.0,
+                        options: [.curveEaseOut],
+                        animations: {
+                            brick.backgroundColor = Colors.hitBrick
+                            behavior.removeBoundary(named: brickBoundaryName)
+                            Timer.scheduledTimer(withTimeInterval: Constants.brickVanishTime, repeats: false) { timer in
+                                brick.alpha = 0.0
+                            }
+                        },
+                        completion: { finished in
+                            if finished {
+                                brick.removeFromSuperview()
+                                let indexOfInt = brickBoundaryName.index(brickBoundaryName.startIndex, offsetBy: 5)
+                                //TODO: extracting int from string is probably a temporary solution.
+                                // 5 is number of chars in "Brick12" before int appears. This should be done more thoughtfully.
+                                if let index = Int(brickBoundaryName[indexOfInt...]) {
+                                    self?.bricks[index] = nil
+                                }
+                                self?.numberOfBricksDown += 1
+                            }
+                        }
+                    )
                 }
             )
             upperLeftPointOfNextBrick.x += brickSize.width + Constants.brickInterspace
@@ -262,7 +251,7 @@ class BreakoutView: UIView {
         }
     }
     
-    private func redrawExistingBricksAndTheirBoundaries() {
+    private func redrawExistingBricksAndAddTheirBoundaries(to behavior: BallBehavior) {
         var numberOfDrawnBricks = 0
         var upperLeftPointOfNextBrick = CGPoint(x: Constants.brickInterspace, y: bricksOffsetFromTop)
 
@@ -282,34 +271,35 @@ class BreakoutView: UIView {
                 
                 let brickBoundaryPath = UIBezierPath(rect: newBrick.frame)
                 let brickBoundaryName = BoundaryNames.brick + String(numberOfDrawnBricks)  // Starts with Brick0
-                ballBehavior!.addBoundary(brickBoundaryPath,
-                              named: brickBoundaryName,
-                              collisionHandler: { [weak self] in
-                                UIView.animate(
-                                    withDuration: Constants.brickVanishTime,
-                                    delay: 0.0,
-                                    options: [.curveEaseOut],
-                                    animations: {
-                                        newBrick.backgroundColor = Colors.hitBrick
-                                        self?.ballBehavior?.removeBoundary(named: brickBoundaryName)
-                                        Timer.scheduledTimer(withTimeInterval: Constants.brickVanishTime, repeats: false) { timer in
-                                            newBrick.alpha = 0.0
-                                        }
-                                    },
-                                    completion: { finished in
-                                        if finished {
-                                            newBrick.removeFromSuperview()
-                                            let boundarySerialNumberStartIndex = brickBoundaryName.index(
-                                                brickBoundaryName.startIndex,
-                                                offsetBy: BoundaryNames.brick.count
-                                            )
-                                            if let index = Int(brickBoundaryName[boundarySerialNumberStartIndex...]) {
-                                                self?.bricks[index] = nil
-                                            }
-                                            self?.numberOfBricksDown += 1
-                                        }
+                behavior.addBoundary(
+                    brickBoundaryPath,
+                    named: brickBoundaryName,
+                    collisionHandler: { [weak self] in
+                        UIView.animate(
+                            withDuration: Constants.brickVanishTime,
+                            delay: 0.0,
+                            options: [.curveEaseOut],
+                            animations: {
+                                newBrick.backgroundColor = Colors.hitBrick
+                                behavior.removeBoundary(named: brickBoundaryName)
+                                Timer.scheduledTimer(withTimeInterval: Constants.brickVanishTime, repeats: false) { timer in
+                                    newBrick.alpha = 0.0
+                                }
+                            },
+                            completion: { finished in
+                                if finished {
+                                    newBrick.removeFromSuperview()
+                                    let boundarySerialNumberStartIndex = brickBoundaryName.index(
+                                        brickBoundaryName.startIndex,
+                                        offsetBy: BoundaryNames.brick.count
+                                    )
+                                    if let index = Int(brickBoundaryName[boundarySerialNumberStartIndex...]) {
+                                        self?.bricks[index] = nil
                                     }
-                                )
+                                    self?.numberOfBricksDown += 1
+                                }
+                            }
+                        )
                     }
                 )
             }
@@ -318,14 +308,13 @@ class BreakoutView: UIView {
         }
     }
     
-    private func drawPaddleAndAddItsBoundaryToBehavior() {
+    private func drawPaddleAndAddItsBoundary(to behavior: BallBehavior) {
         deletePaddle()
         paddle = UIView(frame: CGRect(center: initialPaddleCenter, size: paddleSize))
         paddle.backgroundColor = Colors.paddle
         addSubview(paddle)
-        assert(ballBehavior != nil, "Unexpected case: drawPaddleAndAddItsBoundaryToBehavior can only be called when ballBehavior is already set.")
         let paddleBoundaryPath = UIBezierPath(ovalIn: paddle.frame)
-        ballBehavior!.addBoundary(paddleBoundaryPath, named: BoundaryNames.paddle)
+        behavior.addBoundary(paddleBoundaryPath, named: BoundaryNames.paddle)
     }
     
     private func drawBalls() {
@@ -366,17 +355,13 @@ class BreakoutView: UIView {
     }
     
     private func deletePaddle() {
-        if paddle != nil {
-            //ballBehavior?.removeBoundary(named: BoundaryNames.paddle)
-            paddle.removeFromSuperview()
-            paddle = nil
-        }
+        paddle?.removeFromSuperview()
+        paddle = nil
     }
     
     private func withdrawBricksFromGameView() {
         for brick in bricks {
             brick?.removeFromSuperview()
-            //ballBehavior?.removeBoundary(named: BoundaryNames.brick + String(index))
         }
     }
 
@@ -461,9 +446,9 @@ class BreakoutView: UIView {
     
     // MARK: handling gestures
     @objc func pushBalls(byReactingTo recognizer: UITapGestureRecognizer) {
-        if recognizer.state == .ended {
-            addBallsToAnimatorIfNotAlreadySo()
-            ballBehavior?.pushBalls()
+        if recognizer.state == .ended, let behavior = ballBehavior {
+            addBallsToAnimatorIfNotAlreadySo(using: behavior)
+            behavior.pushBalls()
             startTimerIfNeeded()
         }
     }
@@ -485,13 +470,11 @@ class BreakoutView: UIView {
         }
     }
     
-    private func addBallsToAnimatorIfNotAlreadySo() {
-        if ballBehavior != nil {
-            for (offset: index, element: (ball: ball, isAnimated: isAnimated)) in bouncingBalls.enumerated() {
-                if !isAnimated {
-                    ballBehavior!.addItem(ball)
-                    bouncingBalls[index].isAnimated = true
-                }
+    private func addBallsToAnimatorIfNotAlreadySo(using behavior: BallBehavior) {
+        for (offset: index, element: (ball: ball, isAnimated: isAnimated)) in bouncingBalls.enumerated() {
+            if !isAnimated {
+                behavior.addItem(ball)
+                bouncingBalls[index].isAnimated = true
             }
         }
     }
@@ -505,12 +488,12 @@ class BreakoutView: UIView {
     }
     
     private func returnBallToPaddleIfNecessary() {
-        if let animator = ballBehavior?.dynamicAnimator {
+        if let behavior = ballBehavior, let animator = behavior.dynamicAnimator {
             for (offset: index, element: (ball: ball, isAnimated: _)) in bouncingBalls.enumerated() {
                 if let gameBounds = animator.referenceView?.bounds.insetBy(dx: ball.frame.size.width/2, dy: ball.frame.size.height/2),
                     !gameBounds.contains(ball.center) {
                     
-                    ballBehavior!.removeItem(ball)
+                    behavior.removeItem(ball)
                     bouncingBalls[index].isAnimated = false
                     ball.transform = CGAffineTransform.identity
                     ball.center = newBallCenter
