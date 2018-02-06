@@ -27,8 +27,11 @@ class BreakoutViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         initializeIfNeeded()
+        //TODO: initialize with a saved number of bricks, balls, move to viewdidload
         animator.addBehavior(ballBehavior)
         refreshSettings()
+        // TODO: Consider setting game controlling vars as a tuple to prevent triggering draw multiple times
+        // do not refresh if gameView is just initialized
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -52,6 +55,7 @@ class BreakoutViewController: UIViewController {
             gameView.useRealGravity = UserDefaultsManager.realGravityIsOn ?? false
             gameView.setUpNewGameView()
             gameView.highScoresDelegate = self
+            gameView.backgroundColor = Colors.background
         }
     }
 

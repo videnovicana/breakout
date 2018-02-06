@@ -24,9 +24,17 @@ extension CGRect {
     var lowerLeft: CGPoint { return CGPoint(x: minX, y: maxY) }
     var upperRight: CGPoint { return CGPoint(x: maxX, y: minY) }
     var lowerRight: CGPoint { return CGPoint(x: maxX, y: maxY) }
-    
+
     init(center: CGPoint, size: CGSize) {
         let upperLeft = CGPoint(x: center.x-size.width/2, y: center.y-size.height/2)
         self.init(origin: upperLeft, size: size)
+    }
+}
+
+extension CGPoint {
+    func distanceTo(_ point: CGPoint) -> CGFloat {
+        let dx = self.x - point.x
+        let dy = self.y - point.y
+        return sqrt(dx*dx + dy*dy)
     }
 }

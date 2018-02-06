@@ -45,3 +45,10 @@ struct BoundaryNames {
     static let right = "Right"
     static let upper = "Upper"
 }
+
+struct Colors {
+    static let background = UIColor.black
+    static let spotlightColors = [UIColor.white, UIColor.blue]
+    static let ball = UIColor.red
+    static let paddle = UIColor.green
+}
