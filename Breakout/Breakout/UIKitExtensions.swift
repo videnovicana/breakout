@@ -24,6 +24,8 @@ extension CGRect {
     var lowerLeft: CGPoint { return CGPoint(x: minX, y: maxY) }
     var upperRight: CGPoint { return CGPoint(x: maxX, y: minY) }
     var lowerRight: CGPoint { return CGPoint(x: maxX, y: maxY) }
+    var midLeft: CGPoint { return CGPoint(x: minX, y: midY) }
+    var midRight: CGPoint { return CGPoint(x: maxX, y: midY) }
 
     init(center: CGPoint, size: CGSize) {
         let upperLeft = CGPoint(x: center.x-size.width/2, y: center.y-size.height/2)

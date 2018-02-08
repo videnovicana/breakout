@@ -91,7 +91,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minimumValue="10" maximumValue="40" translatesAutoresizingMaskIntoConstraints="NO" id="Px9-4I-YGd">
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minimumValue="1" maximumValue="40" translatesAutoresizingMaskIntoConstraints="NO" id="Px9-4I-YGd">
                                                     <rect key="frame" x="261" y="20" width="94" height="29"/>
                                                     <connections>
                                                         <action selector="updateNumberOfBricks:" destination="ngi-ng-Z03" eventType="valueChanged" id="34o-FK-vVK"/>

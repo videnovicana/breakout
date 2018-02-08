@@ -15,6 +15,7 @@ class BreakoutView: UIView {
     // MARK: views
     private var bouncingBalls = [(ball: CircleView, isAnimated: Bool)]()
     private var bricks = [SpotlightView?]()
+    private var rays = [RayLayer?]()
     private var paddle: UIView!
     private var timeLabel = UILabel()
 
@@ -184,6 +185,7 @@ class BreakoutView: UIView {
     private func resizeAndMoveBallsUponRotation() {
         for (ball, isAnimated) in bouncingBalls {
             ball.frame.size = ballSize
+            bringSubview(toFront: ball)
             if !isAnimated {
                 ball.center = newBallCenter
             }
@@ -214,6 +216,11 @@ class BreakoutView: UIView {
                 following: paddle.center
             )
             bricks.append(brick)
+
+            let ray = RayLayer(in: bounds, vertices: verticesForRayComing(from: brick))
+            rays.append(ray)
+
+            layer.addSublayer(ray)
             addSubview(brick)
 
             let brickBoundaryPath = UIBezierPath(rect: brick.frame)
@@ -235,12 +242,14 @@ class BreakoutView: UIView {
                         },
                         completion: { finished in
                             if finished {
+                                ray.removeFromSuperlayer()
                                 brick.removeFromSuperview()
                                 let indexOfInt = brickBoundaryName.index(brickBoundaryName.startIndex, offsetBy: 5)
                                 //TODO: extracting int from string is probably a temporary solution.
                                 // 5 is number of chars in "Brick12" before int appears. This should be done more thoughtfully.
                                 if let index = Int(brickBoundaryName[indexOfInt...]) {
                                     self?.bricks[index] = nil
+                                    self?.rays[index] = nil
                                 }
                                 self?.numberOfBricksDown += 1
                             }
@@ -272,6 +281,12 @@ class BreakoutView: UIView {
                 )
 
                 bricks[index] = newBrick
+
+                rays[index] = nil
+                let ray = RayLayer(in: bounds, vertices: verticesForRayComing(from: newBrick))
+                rays[index] = ray
+
+                layer.addSublayer(ray)
                 addSubview(newBrick)
 
                 let brickBoundaryPath = UIBezierPath(rect: newBrick.frame)
@@ -293,6 +308,7 @@ class BreakoutView: UIView {
                             },
                             completion: { finished in
                                 if finished {
+                                    ray.removeFromSuperlayer()
                                     newBrick.removeFromSuperview()
                                     let boundarySerialNumberStartIndex = brickBoundaryName.index(
                                         brickBoundaryName.startIndex,
@@ -300,6 +316,7 @@ class BreakoutView: UIView {
                                     )
                                     if let index = Int(brickBoundaryName[boundarySerialNumberStartIndex...]) {
                                         self?.bricks[index] = nil
+                                        self?.rays[index] = nil
                                     }
                                     self?.numberOfBricksDown += 1
                                 }
@@ -357,6 +374,7 @@ class BreakoutView: UIView {
         withdrawBricksFromGameView()
         bricks.removeAll()
         numberOfBricksDown = 0
+        rays.removeAll()
     }
     
     private func deletePaddle() {
@@ -367,6 +385,13 @@ class BreakoutView: UIView {
     private func withdrawBricksFromGameView() {
         for brick in bricks {
             brick?.removeFromSuperview()
+        }
+        withdrawRaysFromGameView()
+    }
+
+    private func withdrawRaysFromGameView() {
+        for ray in rays {
+            ray?.removeFromSuperlayer()
         }
     }
 
@@ -414,6 +439,10 @@ class BreakoutView: UIView {
     private var ballSize: CGSize {
         return CGSize(width: brickSize.height, height: brickSize.height)
     }
+
+    private var limelightRect: CGRect {
+        return CGRect(center: paddle.center, size: CGSize(width: paddle.frame.width * Constants.limelightToPaddleWidthRatio, height: paddle.frame.height))
+    }
     
     private var initialPaddleCenter: CGPoint {
         return CGPoint(x: bounds.midX, y: bounds.maxY - paddleOffsetFromBottom)
@@ -440,6 +469,10 @@ class BreakoutView: UIView {
             x: paddle?.center.x ?? bounds.midX,
             y: initialPaddleCenter.y - paddleSize.height/2 - ballSize.height/2
         )
+    }
+
+    private func verticesForRayComing(from brick: SpotlightView) -> [CGPoint] {
+        return [brick.convert(brick.bounds.midLeft, to: self), brick.convert(brick.bounds.midRight, to: self), limelightRect.midRight, limelightRect.midLeft]
     }
 
     // MARK: handling gestures
@@ -487,8 +520,11 @@ class BreakoutView: UIView {
     }
 
     private func turnBricksToFollowPaddle() {
-        for brick in bricks {
-            brick?.follow(point: paddle.center)
+        for (index, brick) in bricks.enumerated() {
+            if let brick = brick {
+                brick.follow(point: paddle.center)
+                rays[index]?.setShape(using: verticesForRayComing(from: brick))
+            }
         }
     }
     

@@ -35,6 +35,8 @@ struct Constants {
 
     static let maximumNumberOfHighScores: Int = 10
     static let defaultPlayerName: String = "Lazy Player"
+
+    static let limelightToPaddleWidthRatio: CGFloat = 2
 }
 
 struct BoundaryNames {
@@ -49,6 +51,7 @@ struct BoundaryNames {
 struct Colors {
     static let background = UIColor.black
     static let spotlightColors = [UIColor.white, UIColor.blue]
+    static let rayColor = #colorLiteral(red: 0.04721773266, green: 0.3416930933, blue: 1, alpha: 1)
     static let ball = UIColor.red
     static let paddle = UIColor.green
 }
