@@ -40,3 +40,9 @@ extension CGPoint {
         return sqrt(dx*dx + dy*dy)
     }
 }
+
+extension CGSize {
+    func scaled(by factor: CGFloat) -> CGSize {
+        return CGSize(width: width*factor, height: height*factor)
+    }
+}

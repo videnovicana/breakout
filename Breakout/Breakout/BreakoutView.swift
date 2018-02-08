@@ -16,6 +16,7 @@ class BreakoutView: UIView {
     private var bouncingBalls = [(ball: CircleView, isAnimated: Bool)]()
     private var bricks = [SpotlightView?]()
     private var rays = [RayLayer?]()
+    private var limelight: LimelightView?
     private var paddle: UIView!
     private var timeLabel = UILabel()
 
@@ -157,6 +158,7 @@ class BreakoutView: UIView {
             drawBalls()
             resetCounter()
             addTimeLabel()
+            addLimelight()
         }
     }
     
@@ -166,6 +168,7 @@ class BreakoutView: UIView {
         deleteBricks()
         deletePaddle()
         deleteTimeLabel()
+        deleteLimelight()
     }
     
     func redrawGameViewUponRotation() {
@@ -179,6 +182,7 @@ class BreakoutView: UIView {
             redrawExistingBricksAndAddTheirBoundaries(to: behavior)
             resizeAndMoveBallsUponRotation()
             redrawTimeLabel()
+            redrawLimeLight()
         }
     }
     
@@ -395,6 +399,21 @@ class BreakoutView: UIView {
         }
     }
 
+    private func addLimelight() {
+        limelight = LimelightView(ellipseIn: limelightRect)
+        addSubview(limelight!)
+    }
+
+    private func redrawLimeLight() {
+        limelight?.frame = limelightRect
+        limelight?.setEllipseShape()
+    }
+
+    private func deleteLimelight() {
+        limelight?.removeFromSuperview()
+        limelight = nil
+    }
+
     private func addTimeLabel() {
         timeLabel.frame = timeLabelRect
         timeLabel.text = "Time: \(timeCounter)"
@@ -441,7 +460,9 @@ class BreakoutView: UIView {
     }
 
     private var limelightRect: CGRect {
-        return CGRect(center: paddle.center, size: CGSize(width: paddle.frame.width * Constants.limelightToPaddleWidthRatio, height: paddle.frame.height))
+        return CGRect(
+            center: CGPoint(x: paddle.center.x, y: paddle.center.y + paddle.frame.height/2),
+            size: paddle.frame.size.scaled(by: Constants.limelightToPaddleSizeRatio))
     }
     
     private var initialPaddleCenter: CGPoint {
@@ -490,12 +511,17 @@ class BreakoutView: UIView {
             case .began, .changed:
                 let translationAlongXAxis = recognizer.translation(in: self).x
                 recognizer.setTranslation(CGPoint.zero, in: self)
-                paddle.center.x += translationAlongXAxis < 0 ?
+
+                let dx = translationAlongXAxis < 0 ?
                     max(translationAlongXAxis, maximumAllowedPaddleTranslationAlongXAxisToTheLeft) :
                     min(translationAlongXAxis, maximumAllowedPaddleTranslationAlongXAxisToTheRight)
+
+                paddle.center.x += dx
                 moveBallsWaitingOnPaddle()
                 ballBehavior?.addBoundary(UIBezierPath(ovalIn: paddle.frame), named: BoundaryNames.paddle)
-                turnBricksToFollowPaddle()
+
+                turnBricksAToFollowPaddle()
+                limelight?.center.x += dx
             default:
                 break
             }
@@ -519,7 +545,7 @@ class BreakoutView: UIView {
         }
     }
 
-    private func turnBricksToFollowPaddle() {
+    private func turnBricksAToFollowPaddle() {
         for (index, brick) in bricks.enumerated() {
             if let brick = brick {
                 brick.follow(point: paddle.center)

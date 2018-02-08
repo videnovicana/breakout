@@ -36,7 +36,7 @@ struct Constants {
     static let maximumNumberOfHighScores: Int = 10
     static let defaultPlayerName: String = "Lazy Player"
 
-    static let limelightToPaddleWidthRatio: CGFloat = 2
+    static let limelightToPaddleSizeRatio: CGFloat = 2
 }
 
 struct BoundaryNames {

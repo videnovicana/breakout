@@ -22,6 +22,7 @@
 		E580EAE71F9A52B100D35B8E /* BallBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580EAE61F9A52B100D35B8E /* BallBehavior.swift */; };
 		E580EAE91F9A59CD00D35B8E /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */; };
 		E5B1CE30202A7DB9007F82F1 /* RayLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B1CE2F202A7DB9007F82F1 /* RayLayer.swift */; };
+		E5C74967202CC0E400E2CB3E /* LimelightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C74966202CC0E400E2CB3E /* LimelightView.swift */; };
 		E5D451121FD5D87300D11EEA /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D451111FD5D87300D11EEA /* CircleView.swift */; };
 		E5E09EE820227E4E00CFC774 /* SpotlightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E09EE720227E4E00CFC774 /* SpotlightView.swift */; };
 		E5E97AA72023D6080016F039 /* RadialGradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E97AA62023D6080016F039 /* RadialGradientLayer.swift */; };
@@ -45,6 +46,7 @@
 		E580EAE61F9A52B100D35B8E /* BallBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BallBehavior.swift; sourceTree = "<group>"; };
 		E580EAE81F9A59CC00D35B8E /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		E5B1CE2F202A7DB9007F82F1 /* RayLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RayLayer.swift; sourceTree = "<group>"; };
+		E5C74966202CC0E400E2CB3E /* LimelightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimelightView.swift; sourceTree = "<group>"; };
 		E5D451111FD5D87300D11EEA /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
 		E5E09EE720227E4E00CFC774 /* SpotlightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightView.swift; sourceTree = "<group>"; };
 		E5E97AA62023D6080016F039 /* RadialGradientLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadialGradientLayer.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				E50894FC1FA4DFD000B6AA14 /* SettingsViewController.swift */,
 				E51166D12020A12C00339FC0 /* HighScoresTableViewController.swift */,
 				E580EAE41F9A3DBD00D35B8E /* BreakoutView.swift */,
+				E5C74966202CC0E400E2CB3E /* LimelightView.swift */,
 				E580EAE61F9A52B100D35B8E /* BallBehavior.swift */,
 				E5E09EE720227E4E00CFC774 /* SpotlightView.swift */,
 				E5E97AA62023D6080016F039 /* RadialGradientLayer.swift */,
@@ -191,6 +194,7 @@
 				E515B5D2201FE8C0006E8EAE /* HighScore.swift in Sources */,
 				E580EAE51F9A3DBD00D35B8E /* BreakoutView.swift in Sources */,
 				E515B5D3201FE8C0006E8EAE /* HighScores.xcdatamodeld in Sources */,
+				E5C74967202CC0E400E2CB3E /* LimelightView.swift in Sources */,
 				E580EAD41F9A3D3D00D35B8E /* BreakoutViewController.swift in Sources */,
 				E580EAD21F9A3D3D00D35B8E /* AppDelegate.swift in Sources */,
 				E5E09EE820227E4E00CFC774 /* SpotlightView.swift in Sources */,
