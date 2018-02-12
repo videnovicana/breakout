@@ -37,6 +37,7 @@ struct Constants {
     static let defaultPlayerName: String = "Lazy Player"
 
     static let limelightToPaddleSizeRatio: CGFloat = 2
+    static let spotlightTurnTime: TimeInterval = 0.5
 }
 
 struct BoundaryNames {

@@ -176,7 +176,7 @@ class BreakoutView: UIView {
             behavior.clearCollisionBoundariesAndHandlers()
             withdrawBricksFromGameView()
             deletePaddle()
-            
+
             addScreenBoundary(to: behavior)
             drawPaddleAndAddItsBoundary(to: behavior)
             redrawExistingBricksAndAddTheirBoundaries(to: behavior)
@@ -221,7 +221,7 @@ class BreakoutView: UIView {
             )
             bricks.append(brick)
 
-            let ray = RayLayer(in: bounds, vertices: verticesForRayComing(from: brick))
+            let ray = RayLayer(in: bounds, comingFrom: brick, to: limelightRect)
             rays.append(ray)
 
             layer.addSublayer(ray)
@@ -287,7 +287,7 @@ class BreakoutView: UIView {
                 bricks[index] = newBrick
 
                 rays[index] = nil
-                let ray = RayLayer(in: bounds, vertices: verticesForRayComing(from: newBrick))
+                let ray = RayLayer(in: bounds, comingFrom: newBrick, to: limelightRect)
                 rays[index] = ray
 
                 layer.addSublayer(ray)
@@ -401,12 +401,13 @@ class BreakoutView: UIView {
 
     private func addLimelight() {
         limelight = LimelightView(ellipseIn: limelightRect)
-        addSubview(limelight!)
+        if let limelight = limelight {
+            addSubview(limelight)
+        }
     }
 
     private func redrawLimeLight() {
-        limelight?.frame = limelightRect
-        limelight?.setEllipseShape()
+        limelight?.setEllipseShape(in: limelightRect)
     }
 
     private func deleteLimelight() {
@@ -492,10 +493,6 @@ class BreakoutView: UIView {
         )
     }
 
-    private func verticesForRayComing(from brick: SpotlightView) -> [CGPoint] {
-        return [brick.convert(brick.bounds.midLeft, to: self), brick.convert(brick.bounds.midRight, to: self), limelightRect.midRight, limelightRect.midLeft]
-    }
-
     // MARK: handling gestures
     @objc func pushBalls(byReactingTo recognizer: UITapGestureRecognizer) {
         if recognizer.state == .ended, let behavior = ballBehavior {
@@ -517,11 +514,11 @@ class BreakoutView: UIView {
                     min(translationAlongXAxis, maximumAllowedPaddleTranslationAlongXAxisToTheRight)
 
                 paddle.center.x += dx
+
                 moveBallsWaitingOnPaddle()
                 ballBehavior?.addBoundary(UIBezierPath(ovalIn: paddle.frame), named: BoundaryNames.paddle)
 
-                turnBricksAToFollowPaddle()
-                limelight?.center.x += dx
+                animateSpotlightChasing(paddleMovedBy: dx)
             default:
                 break
             }
@@ -545,15 +542,26 @@ class BreakoutView: UIView {
         }
     }
 
-    private func turnBricksAToFollowPaddle() {
+    private func animateSpotlightChasing(paddleMovedBy dx: CGFloat) {
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(Constants.spotlightTurnTime)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear))
+
+        turnBricksAndRaysToFollowPaddle()
+        limelight?.moveCenterAlongXAxisBy(dx: dx)
+
+        CATransaction.commit()
+    }
+
+    private func turnBricksAndRaysToFollowPaddle() {
         for (index, brick) in bricks.enumerated() {
             if let brick = brick {
                 brick.follow(point: paddle.center)
-                rays[index]?.setShape(using: verticesForRayComing(from: brick))
+                rays[index]?.setShape(from: brick, to: limelightRect)
             }
         }
     }
-    
+
     private func returnBallToPaddleIfNecessary() {
         if let behavior = ballBehavior, let animator = behavior.dynamicAnimator {
             for (offset: index, element: (ball: ball, isAnimated: _)) in bouncingBalls.enumerated() {

@@ -39,6 +39,13 @@ extension CGPoint {
         let dy = self.y - point.y
         return sqrt(dx*dx + dy*dy)
     }
+
+    func rotated(by angle: CGFloat, around center: CGPoint) -> CGPoint {
+        let translationTransform = CGAffineTransform(translationX: -center.x, y: -center.y)
+        let rotationTransform = CGAffineTransform(rotationAngle: angle)
+        let completeTransform = (translationTransform.concatenating(rotationTransform)).concatenating(translationTransform.inverted())
+        return self.applying(completeTransform)
+    }
 }
 
 extension CGSize {
