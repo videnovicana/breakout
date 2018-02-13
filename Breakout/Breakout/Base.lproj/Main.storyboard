@@ -91,7 +91,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minimumValue="1" maximumValue="40" translatesAutoresizingMaskIntoConstraints="NO" id="Px9-4I-YGd">
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5" minimumValue="5" maximumValue="40" translatesAutoresizingMaskIntoConstraints="NO" id="Px9-4I-YGd">
                                                     <rect key="frame" x="261" y="20" width="94" height="29"/>
                                                     <connections>
                                                         <action selector="updateNumberOfBricks:" destination="ngi-ng-Z03" eventType="valueChanged" id="34o-FK-vVK"/>
@@ -203,6 +203,7 @@
                         <outlet property="gravityPullSwitch" destination="bK3-JY-8qG" id="BUg-yK-E8U"/>
                         <outlet property="numberOfBallsControl" destination="Twq-hu-Vhs" id="wPk-ac-MLP"/>
                         <outlet property="numberOfBricksLabel" destination="Hyy-7b-EeS" id="Uso-3Q-SD1"/>
+                        <outlet property="numberOfBricksStepper" destination="Px9-4I-YGd" id="E4o-b7-uTM"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1JF-4G-GGM" userLabel="First Responder" sceneMemberID="firstResponder"/>

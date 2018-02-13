@@ -12,7 +12,7 @@ import CoreMotion
 @IBDesignable
 class BreakoutView: UIView {
     
-    // MARK: views
+    // MARK: - views
     private var bouncingBalls = [(ball: CircleView, isAnimated: Bool)]()
     private var bricks = [SpotlightView?]()
     private var rays = [RayLayer?]()
@@ -20,50 +20,58 @@ class BreakoutView: UIView {
     private var paddle: UIView!
     private var timeLabel = UILabel()
 
-    var ballBehavior: BallBehavior? {
-        didSet {
-            if let behavior = ballBehavior {
-                behavior.setCollidersAction { [weak self] in
-                    self?.returnBallToPaddleIfNecessary()
-                }
-                updateRealGravity(in: behavior)
-            }
-        }
+    //MARK: - initilaizer
+
+    convenience init(frame: CGRect, ballBehavior: BallBehavior, ballCount: Int, brickCount: Int, ballBounciness: CGFloat, useRealGravity: Bool) {
+        self.init(frame: frame)
+        self.backgroundColor = Colors.background
+
+        self.numberOfBalls = ballCount
+        self.numberOfBricks = brickCount
+        self.ballBounciness = ballBounciness
+        self.useRealGravity = useRealGravity
+
+        self.set(ballBehavior: ballBehavior)
+        self.setUpNewGameView()
     }
     
     // MARK: - game controlling (settings) variables
-    var numberOfBalls: Int = 1 {
-        didSet {
-            if numberOfBalls != oldValue {
-                clearViewToRestartGame()
-                setUpNewGameView()
-            }
+
+    private var ballBehavior: BallBehavior?
+    private var numberOfBalls: Int = 1
+    private var numberOfBricks: Int = 20
+    private var ballBounciness: CGFloat = 1.0
+    private var useRealGravity: Bool = false
+
+    private func set(ballBehavior: BallBehavior) {
+        self.ballBehavior = ballBehavior
+
+        ballBehavior.setCollidersAction { [weak self] in
+            self?.returnBallToPaddleIfNecessary()
+        }
+
+        updateRealGravity(in: ballBehavior)
+        ballBehavior.setBallBounciness(ballBounciness)
+    }
+
+    func set(ballCount: Int, brickCount: Int, bounciness: CGFloat, realGravityIsOn: Bool) {
+
+        if ballCount != numberOfBalls || brickCount != numberOfBricks {
+            numberOfBalls = ballCount
+            numberOfBricks = brickCount
+            clearViewToRestartGame()
+            setUpNewGameView()
+        }
+
+        ballBounciness = bounciness
+        useRealGravity = realGravityIsOn
+
+        if let behavior = ballBehavior {
+            behavior.setBallBounciness(bounciness)
+            updateRealGravity(in: behavior)
         }
     }
-    
-    var numberOfBricks: Int = 20 {
-        didSet {
-            if numberOfBricks != oldValue {
-                clearViewToRestartGame()
-                setUpNewGameView()
-            }
-        }
-    }
-    
-    var ballBounciness: CGFloat = 1.0 {
-        didSet {
-            ballBehavior?.setBallBounciness(ballBounciness)
-        }
-    }
-    
-    var useRealGravity: Bool = false {
-        didSet {
-            if let behavior = ballBehavior {
-                updateRealGravity(in: behavior)
-            }
-        }
-    }
-    
+
     private let motionManager = CMMotionManager()
     
     private func updateRealGravity(in behavior: BallBehavior) {

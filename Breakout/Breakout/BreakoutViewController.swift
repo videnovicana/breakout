@@ -22,50 +22,59 @@ class BreakoutViewController: UIViewController {
     // MARK: - view animating tools
     private lazy var animator: UIDynamicAnimator = UIDynamicAnimator(referenceView: self.gameView)
     private var ballBehavior = BallBehavior()
-    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        initializeIfNeeded()
+    }
+
     // MARK: - view life cycle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        initializeIfNeeded()
-        //TODO: initialize with a saved number of bricks, balls, move to viewdidload
+
         animator.addBehavior(ballBehavior)
         refreshSettings()
-        // TODO: Consider setting game controlling vars as a tuple to prevent triggering draw multiple times
-        // do not refresh if gameView is just initialized
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+
         animator.removeBehavior(ballBehavior)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if gameView != nil {
+
+        if gameView != nil, gameView.frame.size != view.bounds.size {
             gameView.frame = self.view.bounds
             gameView.redrawGameViewUponRotation()
         }
     }
-    
+
     private func initializeIfNeeded() {
         if gameView == nil {
-            gameView = BreakoutView(frame: CGRect(center: view.bounds.mid, size: view.bounds.size))
+            gameView = BreakoutView(
+                frame: CGRect(center: view.bounds.mid, size: view.bounds.size),
+                ballBehavior: ballBehavior,
+                ballCount: UserDefaultsManager.numberOfBalls ?? Constants.defautlNumberOfBalls,
+                brickCount: UserDefaultsManager.numberOfBricks ?? Constants.defaultNumberOfBricks,
+                ballBounciness: CGFloat(UserDefaultsManager.ballBounciness ?? 1.0),
+                useRealGravity: UserDefaultsManager.realGravityIsOn ?? false
+            )
             view.addSubview(gameView)
-            gameView.ballBehavior = ballBehavior
-            gameView.useRealGravity = UserDefaultsManager.realGravityIsOn ?? false
-            gameView.setUpNewGameView()
+
             gameView.highScoresDelegate = self
-            gameView.backgroundColor = Colors.background
         }
     }
 
     private func refreshSettings() {
-        gameView.numberOfBalls = UserDefaultsManager.numberOfBalls ?? Constants.defautlNumberOfBalls
-        gameView.numberOfBricks = UserDefaultsManager.numberOfBricks ?? Constants.defaultNumberOfBricks
-        gameView.useRealGravity = UserDefaultsManager.realGravityIsOn ?? false
-        if let bounciness = UserDefaultsManager.ballBounciness {
-            gameView.ballBounciness = CGFloat(bounciness)
-        }
+        gameView.set(
+            ballCount: UserDefaultsManager.numberOfBalls ?? Constants.defautlNumberOfBalls,
+            brickCount: UserDefaultsManager.numberOfBricks ?? Constants.defaultNumberOfBricks,
+            bounciness: CGFloat(UserDefaultsManager.ballBounciness ?? 1.0),
+            realGravityIsOn: UserDefaultsManager.realGravityIsOn ?? false
+        )
     }
 
     // MARK: - saving to model
