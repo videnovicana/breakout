@@ -28,7 +28,6 @@ class HighScore: NSManagedObject {
             let match = try context.fetch(request)
             assert(match.count == 1, "HighScore -- error when trying to get just the bottom high score.")
             if match[0].score > score {
-                context.delete(match[0])
                 return true
             }
         } catch {
@@ -39,6 +38,27 @@ class HighScore: NSManagedObject {
     }
 
     static func updateHighScores(with score: Int, ofUserNamed userName: String, forBallCount numberOfBalls: Int, in context: NSManagedObjectContext) {
+
+        // if current number of highscores >= maximal delete the worst scores to make room
+
+        let request: NSFetchRequest<NSFetchRequestResult> = HighScore.fetchRequest()
+        request.predicate = NSPredicate(format: "numberOfBalls = %@", numberOfBalls as NSNumber)
+        request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
+
+        if let highScoresCount = try? context.count(for: request), highScoresCount >= Constants.maximumNumberOfHighScores {
+
+            request.fetchLimit = (highScoresCount - Constants.maximumNumberOfHighScores) + 1
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+
+            do {
+                try context.execute(deleteRequest)
+            } catch {
+                print(error)
+            }
+        }
+
+        // then save the new high score
+
         let highScore = HighScore(context: context)
         highScore.score = Int64(score)
         highScore.numberOfBalls = Int16(numberOfBalls)
