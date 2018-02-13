@@ -11,16 +11,11 @@ import UIKit
 class SettingsViewController: UITableViewController {
 
     @IBOutlet weak var numberOfBallsControl: UISegmentedControl!
-    //@IBOutlet private weak var numberOfBricksStepper: UIStepper!
+    @IBOutlet private weak var numberOfBricksStepper: UIStepper!
     @IBOutlet private weak var ballBouncinessSlider: UISlider!
     @IBOutlet private weak var gravityPullSwitch: UISwitch!
-    
-    @IBOutlet private weak var numberOfBricksLabel: UILabel! {
-        didSet {
-            numberOfBricksLabel.text = String(UserDefaultsManager.numberOfBricks ?? Constants.defaultNumberOfBricks)
-        }
-    }
-    
+    @IBOutlet private weak var numberOfBricksLabel: UILabel!
+
     @IBAction func updateNumberOfBalls(_ sender: UISegmentedControl) {
         UserDefaultsManager.numberOfBalls = sender.selectedSegmentIndex + 1
     }
@@ -44,8 +39,11 @@ class SettingsViewController: UITableViewController {
     }
 
     private func showSavedSettings() {
-        numberOfBallsControl?.selectedSegmentIndex = (UserDefaultsManager.numberOfBalls ?? 1) - 1
-        ballBouncinessSlider?.value = UserDefaultsManager.ballBounciness ?? 1.0
-        gravityPullSwitch?.isOn = UserDefaultsManager.realGravityIsOn ?? false
+        numberOfBallsControl.selectedSegmentIndex = (UserDefaultsManager.numberOfBalls ?? 1) - 1
+        numberOfBricksStepper.value = Double(UserDefaultsManager.numberOfBricks ?? Constants.defaultNumberOfBricks)
+        ballBouncinessSlider.value = UserDefaultsManager.ballBounciness ?? 1.0
+        gravityPullSwitch.isOn = UserDefaultsManager.realGravityIsOn ?? false
+
+        numberOfBricksLabel.text = String(Int(numberOfBricksStepper.value))
     }
 }
